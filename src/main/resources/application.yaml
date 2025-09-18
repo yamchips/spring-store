@@ -4,6 +4,10 @@ spring:
 
 paymentService: not stripe
 
+mailServer:
+  host: example host
+  port: 7070
+
 stripe:
   apiUrl: https://api.stripe.com
   timeout: 1000

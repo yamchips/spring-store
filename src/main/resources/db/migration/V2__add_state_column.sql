@@ -1,0 +1,1 @@
+ALTER TABLE store.users ADD state varchar(255) NULL;

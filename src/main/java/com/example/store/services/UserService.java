@@ -1,6 +1,10 @@
 package com.example.store.services;
 
+import com.example.store.entities.Address;
+import com.example.store.entities.Profile;
 import com.example.store.entities.User;
+import com.example.store.repositories.AddressRepository;
+import com.example.store.repositories.ProfileRepository;
 import com.example.store.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -13,6 +17,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EntityManager entityManager;
+    private final ProfileRepository profileRepository;
+    private final AddressRepository addressRepository;
 
     @Transactional
     public void showEntityStates() {
@@ -34,5 +40,11 @@ public class UserService {
             System.out.println("Entity is in Transient/Detached state");
         }
 
+    }
+
+    @Transactional
+    public void showRelatedEntities() {
+        Address address = addressRepository.findById(1L).orElseThrow();
+        System.out.println(address);
     }
 }

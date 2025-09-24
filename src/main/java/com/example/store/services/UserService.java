@@ -1,16 +1,14 @@
 package com.example.store.services;
 
 import com.example.store.entities.*;
-import com.example.store.repositories.AddressRepository;
-import com.example.store.repositories.ProductRepository;
-import com.example.store.repositories.ProfileRepository;
-import com.example.store.repositories.UserRepository;
+import com.example.store.repositories.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +19,7 @@ public class UserService {
     private final ProfileRepository profileRepository;
     private final AddressRepository addressRepository;
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public void showEntityStates() {
@@ -85,6 +84,17 @@ public class UserService {
                 .build();
 
         productRepository.save(product);
+    }
 
+    @Transactional
+    public void createProduct2() {
+        Category category = categoryRepository.findById((byte) 1).orElseThrow();
+        Product product = Product.builder()
+                .name("product 2")
+                .description("description of product 2")
+                .price(BigDecimal.valueOf(20.22))
+                .category(category)
+                .build();
+        productRepository.save(product);
     }
 }

@@ -47,4 +47,28 @@ public class UserService {
         Address address = addressRepository.findById(1L).orElseThrow();
         System.out.println(address);
     }
+
+    public void persistRelated() {
+        var user = User.builder()
+                .name("harry")
+                .email("harry@gmail.com")
+                .password("password")
+                .build();
+        var address = Address.builder()
+                .street("street")
+                .city("city")
+                .state("state")
+                .zip("zip")
+                .build();
+        user.addAddress(address);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteRelated() {
+        User user = userRepository.findById(5L).orElseThrow();
+        Address address = user.getAddresses().getFirst();
+        user.removeAddress(address);
+        userRepository.save(user);
+    }
 }

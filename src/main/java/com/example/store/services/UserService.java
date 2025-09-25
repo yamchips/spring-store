@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -96,5 +97,25 @@ public class UserService {
                 .category(category)
                 .build();
         productRepository.save(product);
+    }
+
+    @Transactional
+    public void addProduct() {
+        User user = userRepository.findById(4L).orElseThrow();
+        Iterable<Product> products = productRepository.findAll();
+        products.forEach(user::addProductToWishlist);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteProduct() {
+        productRepository.deleteById(8L);
+//        Manually modify wishlist table
+//        Product product = productRepository.findById(9L).orElseThrow();
+//        for (User user : product.getUsers()) {
+//            user.getWishlist().remove(product);
+//        }
+//        product.getUsers().clear();
+//        productRepository.delete(product);
     }
 }

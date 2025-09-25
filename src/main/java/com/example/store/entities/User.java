@@ -31,6 +31,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @Builder.Default
+    @ToString.Exclude
     private List<Address> addresses = new ArrayList<>();
 
     @ManyToMany
@@ -40,6 +41,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     @Builder.Default
+    @ToString.Exclude
     private Set<Tag> tags = new HashSet<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -73,5 +75,14 @@ public class User {
     public void removeTag(Tag tag) {
         tags.remove(tag);
         tag.getUsers().remove(this);
+    }
+
+    public void addProductToWishlist(Product product) {
+        this.wishlist.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        this.wishlist.remove(product);
+
     }
 }

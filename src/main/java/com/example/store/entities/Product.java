@@ -13,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class Product {
 
     @Id
@@ -34,5 +35,6 @@ public class Product {
     private Category category;
 
     @ManyToMany(mappedBy = "wishlist")
+    @ToString.Exclude
     private Set<User> users;
 }

@@ -29,7 +29,11 @@ public class User {
     @Column(nullable = false, name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "user",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true
+    )
     @Builder.Default
     @ToString.Exclude
     private List<Address> addresses = new ArrayList<>();
@@ -54,6 +58,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
+    @ToString.Exclude
     private Set<Product> wishlist = new HashSet<>();
 
     public void addAddress(Address address) {

@@ -118,4 +118,15 @@ public class UserService {
 //        product.getUsers().clear();
 //        productRepository.delete(product);
     }
+
+    @Transactional
+    public void updateProductPrices() {
+        productRepository.updatePriceByCategory(BigDecimal.valueOf(12), (byte) 1);
+    }
+
+    public void fetchProducts() {
+        Category category = categoryRepository.findById((byte) 1).orElseThrow();
+        var products = productRepository.findByCategory(category);
+        products.forEach(product -> System.out.println(product.toString()));
+    }
 }

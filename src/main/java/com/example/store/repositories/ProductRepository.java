@@ -64,5 +64,8 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     )
     void updatePriceByCategory(BigDecimal newPrice, Byte categoryId);
 
-    List<ProductSummaryDTO> findByCategory(Category category);
+//    @Query(
+//            "select new com.example.store.dtos.ProductSummaryDTO(p.id, p.name) from Product p where p.category = :category"
+//    )
+    List<ProductSummary> findByCategory(@Param("category") Category category);
 }

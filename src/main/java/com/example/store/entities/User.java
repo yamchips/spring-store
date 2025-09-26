@@ -12,7 +12,6 @@ import java.util.Set;
 @Table(name = "users")
 @Getter @Setter @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 public class User {
     @Id
@@ -35,7 +34,6 @@ public class User {
             orphanRemoval = true
     )
     @Builder.Default
-    @ToString.Exclude
     private List<Address> addresses = new ArrayList<>();
 
     @ManyToMany
@@ -45,7 +43,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     @Builder.Default
-    @ToString.Exclude
     private Set<Tag> tags = new HashSet<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -58,7 +55,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    @ToString.Exclude
     private Set<Product> wishlist = new HashSet<>();
 
     public void addAddress(Address address) {
@@ -89,5 +85,13 @@ public class User {
     public void removeProduct(Product product) {
         this.wishlist.remove(product);
 
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "name = " + name + ", " +
+                "email = " + email + ")";
     }
 }

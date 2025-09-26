@@ -129,4 +129,10 @@ public class UserService {
         var products = productRepository.findByCategory(category);
         products.forEach(product -> System.out.println(product.toString()));
     }
+
+    @Transactional
+    public void fetchUser() {
+        User user = userRepository.findByEmail("harry@gmail.com").orElseThrow();
+        System.out.println(user.getTags().toString());
+    }
 }

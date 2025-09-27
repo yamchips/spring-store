@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -124,15 +125,18 @@ public class UserService {
         productRepository.updatePriceByCategory(BigDecimal.valueOf(12), (byte) 1);
     }
 
+    @Transactional
     public void fetchProducts() {
-        Category category = categoryRepository.findById((byte) 1).orElseThrow();
-        var products = productRepository.findByCategory(category);
-        products.forEach(product -> System.out.println(product.toString()));
+        List<Product> products = productRepository.findProducts(BigDecimal.valueOf(5), BigDecimal.valueOf(15));
+        products.forEach(System.out::println);
     }
 
     @Transactional
     public void fetchUser() {
-        User user = userRepository.findByEmail("harry@gmail.com").orElseThrow();
-        System.out.println(user.getTags().toString());
+        Iterable<User> users = userRepository.findAllWithAddress();
+        users.forEach(user -> {
+            System.out.println(user);
+            user.getAddresses().forEach(System.out::println);
+        });
     }
 }

@@ -1,5 +1,6 @@
 package com.example.store.services;
 
+import com.example.store.dtos.UserSummary;
 import com.example.store.entities.*;
 import com.example.store.repositories.*;
 import jakarta.persistence.EntityManager;
@@ -9,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -137,6 +136,13 @@ public class UserService {
         users.forEach(user -> {
             System.out.println(user);
             user.getAddresses().forEach(System.out::println);
+        });
+    }
+
+    public void findProfiles() {
+        List<UserSummary> userSummaries = userRepository.findLoyalUsers(2);
+        userSummaries.forEach(user -> {
+            System.out.println(user.getId() + ": " + user.getEmail());
         });
     }
 }

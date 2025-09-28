@@ -3,9 +3,12 @@ package com.example.store.services;
 import com.example.store.dtos.UserSummary;
 import com.example.store.entities.*;
 import com.example.store.repositories.*;
+import com.example.store.repositories.specifications.ProductSpec;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -126,7 +129,16 @@ public class UserService {
 
     @Transactional
     public void fetchProducts() {
-        List<Product> products = productRepository.findProducts(BigDecimal.valueOf(5), BigDecimal.valueOf(15));
+        Product product = new Product();
+        product.setName("product");
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIncludeNullValues()
+                .withIgnorePaths("id", "description")
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        
+        Example<Product> example = Example.of(product, matcher);
+        List<Product> products = productRepository.findAll(example);
         products.forEach(System.out::println);
     }
 
@@ -144,5 +156,43 @@ public class UserService {
         userSummaries.forEach(user -> {
             System.out.println(user.getId() + ": " + user.getEmail());
         });
+    }
+
+    public void fetchProductsByCriteria() {
+        List<Product> products = productRepository.findProductsByCriteria(null, BigDecimal.valueOf(1), BigDecimal.valueOf(10));
+        products.forEach(System.out::println);
+    }
+
+    public void fetchProductsBySpecifications(String name, BigDecimal minPrice, BigDecimal maxPrice) {
+        Specification<Product> spec = Specification.where(null);
+        if (name != null) {
+            spec = spec.and(ProductSpec.hasName(name));
+        }
+        if (minPrice != null) {
+            spec = spec.and(ProductSpec.hasPriceGreaterThanOrEqualTo(minPrice));
+        }
+        if (maxPrice != null) {
+            spec = spec.and(ProductSpec.hasPriceLessThanOrEqualTo(maxPrice));
+        }
+        productRepository.findAll(spec).forEach(System.out::println);
+    }
+
+    public void fetchSortedProducts() {
+        Sort sort = Sort.by("name").and(
+                Sort.by("price").descending()
+        );
+        productRepository.findAll(sort).forEach(System.out::println);
+    }
+
+    public void fetchPaginatedProducts(int pageNumber, int size) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, size);
+        Page<Product> page = productRepository.findAll(pageRequest);
+        List<Product> products = page.getContent();
+        products.forEach(System.out::println);
+
+        int totalPages = page.getTotalPages();
+        long totalElements = page.getTotalElements();
+        System.out.println("total pages: " + totalPages + " total elements: " + totalElements);
+
     }
 }
